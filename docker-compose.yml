@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongo:
+    image: mongo:6.0
+    container_name: smartisense_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - smartisense_net
+
+  # Smart-I-Sense Backend (Node.js + Embedded Aedes MQTT)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartisense_backend
+    restart: always
+    ports:
+      - "5000:5000" # REST & WebSockets
+      - "1883:1883" # MQTT Broker
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/smart-i-sense
+      - JWT_SECRET=production_super_secret_key_change_me
+      - MQTT_BROKER_URL=mqtt://localhost:1883
+      - CORS_ORIGIN=*
+    depends_on:
+      - mongo
+    networks:
+      - smartisense_net
+
+  # Smart-I-Sense Web Frontend (Optional containerization for full stack)
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "5173:80"
+
+volumes:
+  mongo_data:
+
+networks:
+  smartisense_net:
+    driver: bridge

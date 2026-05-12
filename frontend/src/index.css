@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  :root {
+    --bg-page: #F8FAFC;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --bg-card-hover: rgba(255, 255, 255, 0.9);
+    --bg-active: rgba(226, 232, 240, 0.8);
+    
+    --border-subtle: rgba(0, 0, 0, 0.05);
+    --border-focus: rgba(139, 92, 246, 0.3);
+    --border-glass: rgba(0, 0, 0, 0.1);
+
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+
+    --bg-gradient-a: rgba(139, 92, 246, 0.04);
+    --bg-gradient-b: rgba(56, 189, 248, 0.04);
+    
+    --shadow-glass: 0 8px 32px rgba(0,0,0,0.04);
+    --shadow-hover: 0 8px 32px rgba(139,92,246,0.08);
+  }
+
+  .dark {
+    --bg-page: #0B0F1A;
+    --bg-card: rgba(15, 23, 42, 0.6);
+    --bg-card-hover: rgba(23, 37, 84, 0.7);
+    --bg-active: rgba(30, 41, 59, 0.8);
+    
+    --border-subtle: rgba(34, 211, 238, 0.08); /* Cyan subtle */
+    --border-focus: rgba(34, 211, 238, 0.4);
+    --border-glass: rgba(34, 211, 238, 0.15); /* Cyan glass */
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    
+    --bg-gradient-a: rgba(34, 211, 238, 0.08); /* Cyan glow */
+    --bg-gradient-b: rgba(14, 165, 233, 0.08); /* Blue glow */
+
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 0 30px rgba(34, 211, 238, 0.1);
+  }
+
+  body {
+    @apply bg-[var(--bg-page)] text-[var(--text-primary)] font-sans antialiased overflow-hidden transition-colors duration-500;
+    background-image: 
+      radial-gradient(circle at 0% 0%, var(--bg-gradient-a), transparent 40%),
+      radial-gradient(circle at 100% 100%, var(--bg-gradient-b), transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  /* Premium Glassmorphism Card (Soft 16px radius) */
+  .card-base {
+    @apply bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden shrink-0 backdrop-blur-2xl shadow-[var(--shadow-glass)];
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-base:hover {
+    @apply bg-[var(--bg-card-hover)] border-[var(--border-glass)] shadow-[var(--shadow-hover)];
+    transform: translateY(-2px);
+  }
+
+  /* Interaction Primitives */
+  .btn-ghost {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] transition-all duration-300 font-medium shrink-0;
+  }
+
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all shrink-0;
+  }
+
+  /* Nav Pills (Soft Pill Style) */
+  .pill-tab {
+    @apply px-4 py-1.5 text-sm font-semibold rounded-full text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all shrink-0;
+  }
+  .pill-tab.active {
+    @apply bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.2)];
+  }
+
+  /* Status Badges with NEON GLOW */
+  .badge {
+    @apply px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest border shrink-0 backdrop-blur-md;
+  }
+  .badge-blue { @apply bg-cyan-500/10 text-cyan-500 border-cyan-500/20 shadow-[0_0_10px_rgba(34,211,238,0.1)]; }
+  .badge-green { @apply bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]; }
+  .badge-amber { @apply bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_10px_rgba(fb,bf,24,0.1)]; }
+  .badge-red { @apply bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_10px_rgba(f4,3f,5e,0.1)]; }
+  .badge-purple { @apply bg-violet-500/10 text-violet-400 border-violet-500/20 shadow-[0_0_10px_rgba(d9,46,ef,0.1)]; }
+}
+
+/* 
+ * Recharts Overrides
+ */
+.recharts-cartesian-axis-tick-value {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-subtle);
+  stroke-dasharray: 4 4;
+}
+
+.recharts-tooltip-cursor {
+  fill: var(--border-subtle);
+  stroke: var(--border-glass);
+}
+
+/* Premium Glass Tooltip */
+.minimal-tooltip {
+  @apply bg-[var(--bg-card-hover)] backdrop-blur-lg border border-[var(--border-glass)] text-[var(--text-primary)] rounded-xl p-4 shadow-[var(--shadow-glass)] pointer-events-none;
+}
+
+/* Scrollbar (Sleek) */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-glass);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-focus);
+}
+
+/* Skip to Main Content (a11y) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  z-index: 10000;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0 0 8px 0;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Focus-visible for keyboard a11y */
+*:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hide scrollbar utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (min-width: 768px) {
+  .no-scrollbar-md::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar-md {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Mobile modal full-screen override */
+@media (max-width: 640px) {
+  .modal-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+}
+
